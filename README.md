@@ -1,0 +1,1 @@
+# GPT-N8N-Action-Schema
