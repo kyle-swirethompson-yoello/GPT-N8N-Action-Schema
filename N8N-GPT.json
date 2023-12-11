@@ -11,760 +11,1189 @@
     }
   ],
   "paths": {        "/audit": {
-            "post": {
-                "x-eov-operation-id": "generateAudit",
-                "x-eov-operation-handler": "v1/handlers/audit/audit.handler",
-                "tags": [
-                    "Audit"
-                ],
-                "summary": "Generate an audit",
-                "description": "Generate a security audit for your n8n instance.",
-                "requestBody": {
-                    "required": false,
-                    "content": {
-                        "application/json": {
-                            "schema": {
+    "post": {
+        "x-eov-operation-id": "generateAudit",
+        "x-eov-operation-handler": "v1/handlers/audit/audit.handler",
+        "tags": [
+            "Audit"
+        ],
+        "summary": "Generate an audit",
+        "description": "Generate a security audit for your n8n instance.",
+        "requestBody": {
+            "required": false,
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "additionalOptions": {
                                 "type": "object",
                                 "properties": {
-                                    "additionalOptions": {
-                                        "type": "object",
-                                        "properties": {
-                                            "daysAbandonedWorkflow": {
-                                                "type": "integer",
-                                                "description": "Days for a workflow to be considered abandoned if not executed"
-                                            },
-                                            "categories": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "string",
-                                                    "enum": [
-                                                        "credentials",
-                                                        "database",
-                                                        "nodes",
-                                                        "filesystem",
-                                                        "instance"
-                                                    ]
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Operation successful.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Audit"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/Unauthorized"
-                    },
-                    "500": {
-                        "description": "Internal server error."
-                    }
-                },
-                "operationId": "post_audit"
-            }
-        },        "/source-control/pull": {
-            "post": {
-                "x-eov-operation-id": "pull",
-                "x-eov-operation-handler": "v1/handlers/sourceControl/sourceControl.handler",
-                "tags": [
-                    "SourceControl"
-                ],
-                "summary": "Pull changes from the remote repository",
-                "description": "Requires the Source Control feature to be licensed and connected to a repository.",
-                "requestBody": {
-                    "description": "Pull options",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Pull"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Import result",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ImportResult"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "$ref": "#/components/responses/BadRequest"
-                    },
-                    "409": {
-                        "$ref": "#/components/responses/Conflict"
-                    }
-                },
-                "operationId": "post_source-control_pull"
-            }
-        },
-        "/credentials": {
-            "post": {
-                "x-eov-operation-id": "createCredential",
-                "x-eov-operation-handler": "v1/handlers/credentials/credentials.handler",
-                "tags": [
-                    "Credential"
-                ],
-                "summary": "Create a credential",
-                "description": "Creates a credential that can be used by nodes of the specified type.",
-                "requestBody": {
-                    "description": "Credential to be created.",
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Credential"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Operation successful.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Credential"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/Unauthorized"
-                    },
-                    "415": {
-                        "description": "Unsupported media type."
-                    }
-                },
-                "operationId": "post_credentials"
-            }
-        },
-        "/credentials/{credentials_id}": {
-            "delete": {
-                "x-eov-operation-id": "deleteCredential",
-                "x-eov-operation-handler": "v1/handlers/credentials/credentials.handler",
-                "tags": [
-                    "Credential"
-                ],
-                "summary": "Delete credential by ID",
-                "description": "Deletes a credential from your instance. You must be the owner of the credentials",
-                "operationId": "deleteCredential",
-                "parameters": [  {"in": "path", "name": "credentials_id", "schema": {"title": "credentials Id", "type": "string", "pattern": "^[A-Z0-9]{26}$", "example": "R2DjclaysHbqn778"}, "required": true, "example": "R2DjclaysHbqn778"}
-
-                    
-                    ],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Credential"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/Unauthorized"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/NotFound"
-                    }
-                }
-            }
-        },
-        "/credentials/schema/{credentialTypeName}": {
-            "get": {
-                "x-eov-operation-id": "getCredentialType",
-                "x-eov-operation-handler": "v1/handlers/credentials/credentials.handler",
-                "tags": [
-                    "Credential"
-                ],
-                "summary": "Show credential data schema",
-                "parameters": [                    {
-                        "name": "credentialTypeName",
-                        "in": "path",
-                        "description": "The credential type name that you want to get the schema for",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "exampleProperty": {
+                                    "daysAbandonedWorkflow": {
+                                        "type": "integer",
+                                        "description": "Days for a workflow to be considered abandoned if not executed"
+                                    },
+                                    "categories": {
+                                        "type": "array",
+                                        "items": {
                                             "type": "string",
-                                            "description": "This is a placeholder property. Update it to reflect the actual API response."
-                                        }
-                                    },
-                                    "description": "Placeholder schema. Update with actual response schema."
-                                },
-                                "examples": {
-                                    "freshdeskApi": {
-                                        "value": {
-                                            "additionalProperties": false,
-                                            "type": "object",
-                                            "properties": {
-                                                "apiKey": {
-                                                    "type": "string"
-                                                },
-                                                "domain": {
-                                                    "type": "string"
-                                                }
-                                            },
-                                            "required": [
-                                                "apiKey",
-                                                "domain"
-                                            ]
-                                        }
-                                    },
-                                    "slackOAuth2Api": {
-                                        "value": {
-                                            "additionalProperties": false,
-                                            "type": "object",
-                                            "properties": {
-                                                "clientId": {
-                                                    "type": "string"
-                                                },
-                                                "clientSecret": {
-                                                    "type": "string"
-                                                }
-                                            },
-                                            "required": [
-                                                "clientId",
-                                                "clientSecret"
+                                            "enum": [
+                                                "credentials",
+                                                "database",
+                                                "nodes",
+                                                "filesystem",
+                                                "instance"
                                             ]
                                         }
                                     }
                                 }
                             }
                         }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/Unauthorized"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/NotFound"
                     }
-                },
-                "operationId": "get_credentials_schema_credentialTypeName"
+                }
             }
         },
-
-    "/users": {
-      "get": {
-        "operationId": "getUsers",
-        "summary": "Retrieve all users",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of items to return.",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "default": 100
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "description": "Paginate through users by setting the cursor parameter to a nextCursor attribute returned by a previous request's response.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "includeRole",
-            "in": "query",
-            "description": "Whether to include the user's role or not.",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": true
-            }
-          }
-        ],
         "responses": {
-          "200": {
-            "description": "Operation successful.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserData"
+            "200": {
+                "description": "Operation successful.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Audit"
+                        }
+                    }
                 }
-              }
+            },
+            "401": {
+                "$ref": "#/components/responses/Unauthorized"
+            },
+            "500": {
+                "description": "Internal server error."
             }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      }
-    },
-    "/users/{id}": {
-      "get": {
-        "operationId": "getUserById",
-        "summary": "Get user by ID/Email",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The ID or email of the user.",
-            "required": true,
-            "schema": {
-"example": "123e4567-e89b-12d3-a456-426614174000" ,
-              "type": "string"
-            }
-          },
-          {
-            "name": "includeRole",
-            "in": "query",
-            "description": "Whether to include the user's role or not.",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": true
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operation successful.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "The specified resource was not found."
-          }
-        }
-      }
-    },
-    "/workflows": {
-      "get": {
-        "operationId": "getWorkflows",
-        "summary": "Retrieve all workflows",
-        "parameters": [
-          {
-            "name": "active",
-            "in": "query",
-            "description": "Filter by active status of workflows.",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "tags",
-            "in": "query",
-            "description": "Filter workflows by tags.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of items to return.",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "default": 100
-            }
-          },
-          {
-            "name": "cursor",
-            "in": "query",
-            "description": "Paginate through workflows by setting the cursor parameter to a nextCursor attribute returned by a previous request's response.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operation successful.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WorkflowData"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      }
-    },
-    "/workflows/{id}": {
-      "get": {
-        "operationId": "getWorkflowById",
-        "summary": "Retrieves a workflow",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "The ID of the workflow.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Operation successful.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Workflow"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "The specified resource was not found."
-          }
-        }
-      }
-    },
-"/workflows/{id}": {
-  "delete": {
-    "operationId": "deleteWorkflow",
-    "summary": "Delete a workflow",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "description": "The ID of the workflow.",
-        "schema": {
-          "type": "string",
-          "example": "0f5532f9-36ba-4bef-86c7-30d607400b15"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Operation successful."
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "404": {
-        "description": "The specified resource was not found."
-      }
+        },
+        "operationId": "post_audit"
     }
-  },
-  "put": {
-    "operationId": "updateWorkflow",
-    "summary": "Update a workflow",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "description": "The ID of the workflow.",
-        "schema": {
-          "type": "string",
-          "example": "0f5532f9-36ba-4bef-86c7-30d607400b15"
-        }
-      }
-    ],
+},        "/source-control/pull": {
+    "post": {
+        "x-eov-operation-id": "pull",
+        "x-eov-operation-handler": "v1/handlers/sourceControl/sourceControl.handler",
+        "tags": [
+            "SourceControl"
+        ],
+        "summary": "Pull changes from the remote repository",
+        "description": "Requires the Source Control feature to be licensed and connected to a repository.",
+        "requestBody": {
+            "description": "Pull options",
+            "required": true,
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "$ref": "#/components/schemas/Pull"
+                    }
+                }
+            }
+        },
+        "responses": {
+            "200": {
+                "description": "Import result",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ImportResult"
+                        }
+                    }
+                }
+            },
+            "400": {
+                "$ref": "#/components/responses/BadRequest"
+            },
+            "409": {
+                "$ref": "#/components/responses/Conflict"
+            }
+        },
+        "operationId": "post_source-control_pull"
+    }
+},
+"/credentials": {
+  "post": {
+    "operationId": "createCredential",
+    "tags": ["Credential"],
+    "summary": "Create a new credential",
+    "description": "Creates a new credential that can be used by nodes.",
     "requestBody": {
-      "description": "Updated workflow object",
+      "description": "Credential to be created.",
       "required": true,
       "content": {
         "application/json": {
           "schema": {
-            "$ref": "#/components/schemas/WorkflowUpdate"
+            "type": "object",
+            "required": ["name", "type", "data"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "example": "Joe's Github Credentials"
+              },
+              "type": {
+                "type": "string",
+                "example": "githubApi"
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "example": "ada612vad6fa5df4adf5a5dsf4389adsf76da7s"
+                  }
+                },
+                "required": ["token"]
+              }
+            }
           }
         }
       }
     },
     "responses": {
       "200": {
-        "description": "Workflow updated successfully"
+        "description": "Credential created successfully."
+      },
+      "400": {
+        "description": "Invalid request format."
+      }
+    }
+  }
+},          
+"/credentials/{credentials_id}": {
+    "delete": {
+        "x-eov-operation-id": "deleteCredential",
+        "x-eov-operation-handler": "v1/handlers/credentials/credentials.handler",
+        "tags": [
+            "Credential"
+        ],
+        "summary": "Delete credential by ID",
+        "description": "Deletes a credential from your instance. You must be the owner of the credentials",
+        "operationId": "deleteCredential",
+        "parameters": [  {"in": "path", "name": "credentials_id", "schema": {"title": "credentials Id", "type": "string", "pattern": "^[A-Z0-9]{26}$", "example": "R2DjclaysHbqn778"}, "required": true, "example": "R2DjclaysHbqn778"}
+
+            
+            ],
+        "responses": {
+            "200": {
+                "description": "Operation successful.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Credential"
+                        }
+                    }
+                }
+            },
+            "401": {
+                "$ref": "#/components/responses/Unauthorized"
+            },
+            "404": {
+                "$ref": "#/components/responses/NotFound"
+            }
+        }
+    }
+},
+"/credentials/schema/{credentialTypeName}": {
+    "get": {
+        "x-eov-operation-id": "getCredentialType",
+        "x-eov-operation-handler": "v1/handlers/credentials/credentials.handler",
+        "tags": [
+            "Credential"
+        ],
+        "summary": "Show credential data schema",
+        "parameters": [                    {
+                "name": "credentialTypeName",
+                "in": "path",
+                "description": "The credential type name that you want to get the schema for",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            }],
+        "responses": {
+            "200": {
+                "description": "Operation successful.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "exampleProperty": {
+                                    "type": "string",
+                                    "description": "This is a placeholder property. Update it to reflect the actual API response."
+                                }
+                            },
+                            "description": "Placeholder schema. Update with actual response schema."
+                        },
+                        "examples": {
+                            "freshdeskApi": {
+                                "value": {
+                                    "additionalProperties": false,
+                                    "type": "object",
+                                    "properties": {
+                                        "apiKey": {
+                                            "type": "string"
+                                        },
+                                        "domain": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "apiKey",
+                                        "domain"
+                                    ]
+                                }
+                            },
+                            "slackOAuth2Api": {
+                                "value": {
+                                    "additionalProperties": false,
+                                    "type": "object",
+                                    "properties": {
+                                        "clientId": {
+                                            "type": "string"
+                                        },
+                                        "clientSecret": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "clientId",
+                                        "clientSecret"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "401": {
+                "$ref": "#/components/responses/Unauthorized"
+            },
+            "404": {
+                "$ref": "#/components/responses/NotFound"
+            }
+        },
+        "operationId": "get_credentials_schema_credentialTypeName"
+    }
+},
+"/users": {
+"get": {
+"operationId": "getUsers",
+"summary": "Retrieve all users",
+"parameters": [
+  {
+    "name": "limit",
+    "in": "query",
+    "description": "The maximum number of items to return.",
+    "required": false,
+    "schema": {
+      "type": "integer",
+      "default": 100
+    }
+  },
+  {
+    "name": "cursor",
+    "in": "query",
+    "description": "Paginate through users by setting the cursor parameter to a nextCursor attribute returned by a previous request's response.",
+    "required": false,
+    "schema": {
+      "type": "string"
+    }
+  },
+  {
+    "name": "includeRole",
+    "in": "query",
+    "description": "Whether to include the user's role or not.",
+    "required": false,
+    "schema": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+],
+"responses": {
+  "200": {
+    "description": "Operation successful.",
+    "content": {
+      "application/json": {
+        "schema": {
+          "$ref": "#/components/schemas/UserData"
+        }
+      }
+    }
+  },
+  "401": {
+    "description": "Unauthorized"
+  }
+}
+}
+},
+"/users/{id}": {
+"get": {
+"operationId": "getUserById",
+"summary": "Get user by ID/Email",
+"parameters": [
+  {
+    "name": "id",
+    "in": "path",
+    "description": "The ID or email of the user.",
+    "required": true,
+    "schema": {
+"example": "123e4567-e89b-12d3-a456-426614174000" ,
+      "type": "string"
+    }
+  },
+  {
+    "name": "includeRole",
+    "in": "query",
+    "description": "Whether to include the user's role or not.",
+    "required": false,
+    "schema": {
+      "type": "boolean",
+      "default": true
+    }
+  }
+],
+"responses": {
+  "200": {
+    "description": "Operation successful.",
+    "content": {
+      "application/json": {
+        "schema": {
+          "$ref": "#/components/schemas/User"
+        }
+      }
+    }
+  },
+  "401": {
+    "description": "Unauthorized"
+  },
+  "404": {
+    "description": "The specified resource was not found."
+  }
+}
+}
+},
+"/workflows": {
+  "get": {
+  "operationId": "getWorkflows",
+  "summary": "Retrieve all workflows",
+  "parameters": [
+    {
+      "name": "active",
+      "in": "query",
+      "description": "Filter by active status of workflows.",
+      "required": false,
+      "schema": {
+        "type": "boolean"
+      }
+    },
+    {
+      "name": "tags",
+      "in": "query",
+      "description": "Filter workflows by tags.",
+      "required": false,
+      "schema": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "limit",
+      "in": "query",
+      "description": "The maximum number of items to return.",
+      "required": false,
+      "schema": {
+        "type": "integer",
+        "default": 100
+      }
+    },
+    {
+      "name": "cursor",
+      "in": "query",
+      "description": "Paginate through workflows by setting the cursor parameter to a nextCursor attribute returned by a previous request's response.",
+      "required": false,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Operation successful.",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/WorkflowData"
+          }
+        }
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    }
+  }
+  },
+  "post": {
+    "operationId": "createWorkflow",
+    "summary": "Create a workflow",
+    "description": "Create a workflow in your instance.",
+    "requestBody": {
+      "description": "Created workflow object.",
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "required": ["name", "nodes", "connections", "settings"],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "nodes": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Node"
+                }
+              },
+              "connections": {
+                "$ref": "#/components/schemas/Connections"
+              },
+              "settings": {
+                "$ref": "#/components/schemas/WorkflowSettings"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "200": {
+        "description": "A workflow object",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Workflow"
+            }
+          }
+        }
       },
       "400": {
         "description": "The request is invalid or provides malformed data."
       },
       "401": {
         "description": "Unauthorized"
-      },
-      "404": {
-        "description": "The specified resource was not found."
       }
     }
+  }
+  
+
+},
+"/workflows/{id}": {
+"delete": {
+"operationId": "deleteWorkflow",
+"summary": "Delete a workflow",
+"parameters": [
+{
+"name": "id",
+"in": "path",
+"required": true,
+"description": "The ID of the workflow.",
+"schema": {
+  "type": "string",
+  "example": "0f5532f9-36ba-4bef-86c7-30d607400b15"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Operation successful."
+},
+"401": {
+"description": "Unauthorized"
+},
+"404": {
+"description": "The specified resource was not found."
+}
+}
+},
+"put": {
+  "operationId": "updateWorkflow",
+  "summary": "Update a workflow",
+  "parameters": [
+    {
+      "name": "id",
+      "in": "path",
+      "required": true,
+      "description": "The ID of the workflow.",
+      "schema": {
+        "type": "string",
+        "example": "baS4EWkmltotnpOu"
+      }
+    }
+  ],
+  "requestBody": {
+    "description": "Updated workflow object",
+    "required": true,
+    "content": {
+      "application/json": {
+        "schema": {
+          "type": "object",
+          "required": ["name", "nodes", "connections", "settings"],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "nodes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Node"
+              }
+            },
+            "connections": {
+              "$ref": "#/components/schemas/Connections"
+            },
+            "settings": {
+              "$ref": "#/components/schemas/WorkflowSettings"
+            },
+            "staticData": {
+              "type": "object",
+              "nullable": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "responses": {
+    "200": {
+      "description": "Workflow updated successfully"
+    },
+    "400": {
+      "description": "The request is invalid or provides malformed data."
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "404": {
+      "description": "The specified resource was not found."
+    }
+  }
+},
+"get": {
+  "operationId": "getWorkflowById",
+  "summary": "Retrieves a workflow",
+  "parameters": [
+    {
+      "name": "id",
+      "in": "path",
+      "description": "The ID of the workflow.",
+      "required": true,
+      "schema": {
+        "type": "string"
+      }
+    }
+  ],
+  "responses": {
+    "200": {
+      "description": "Operation successful.",
+      "content": {
+        "application/json": {
+          "schema": {
+            "$ref": "#/components/schemas/Workflow"
+          }
+        }
+      }
+    },
+    "401": {
+      "description": "Unauthorized"
+    },
+    "404": {
+      "description": "The specified resource was not found."
+    }
+  }
   }
 },
 "/workflows/{id}/activate": {
-  "post": {
-    "operationId": "activateWorkflow",
-    "summary": "Activate a workflow",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "description": "The ID of the workflow.",
-        "schema": {
-          "type": "string",
-          "example": "2tUt1wbLX592XDdX"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Workflow activated successfully",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Workflow"
-            }
-          }
-        }
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "404": {
-        "description": "The specified resource was not found."
-      }
+"post": {
+"operationId": "activateWorkflow",
+"summary": "Activate a workflow",
+"parameters": [
+{
+"name": "id",
+"in": "path",
+"required": true,
+"description": "The ID of the workflow.",
+"schema": {
+  "type": "string",
+  "example": "2tUt1wbLX592XDdX"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Workflow activated successfully",
+"content": {
+  "application/json": {
+    "schema": {
+      "$ref": "#/components/schemas/Workflow"
     }
   }
+}
+},
+"401": {
+"description": "Unauthorized"
+},
+"404": {
+"description": "The specified resource was not found."
+}
+}
+}
 },
 "/workflows/{id}/deactivate": {
-  "post": {
-    "operationId": "deactivateWorkflow",
-    "summary": "Deactivate a workflow",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "description": "The ID of the workflow.",
-        "schema": {
-          "type": "string",
-          "example": "2tUt1wbLX592XDdX"
-        }
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Workflow deactivated successfully",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Workflow"
+"post": {
+"operationId": "deactivateWorkflow",
+"summary": "Deactivate a workflow",
+"parameters": [
+{
+"name": "id",
+"in": "path",
+"required": true,
+"description": "The ID of the workflow.",
+"schema": {
+  "type": "string",
+  "example": "2tUt1wbLX592XDdX"
+}
+}
+],
+"responses": {
+"200": {
+"description": "Workflow deactivated successfully",
+"content": {
+  "application/json": {
+    "schema": {
+      "$ref": "#/components/schemas/Workflow"
+    }
+  }
+}
+},
+"401": {
+"description": "Unauthorized"
+},
+"404": {
+"description": "The specified resource was not found."
+}
+}
+}
+},
+"/executions": {
+    "get": {
+        "x-eov-operation-id": "getExecutions",
+        "x-eov-operation-handler": "v1/handlers/executions/executions.handler",
+        "tags": [
+            "Execution"
+        ],
+        "summary": "Retrieve all executions",
+        "description": "Retrieve all executions from your instance.",
+        "parameters": [
+            {
+                "name": "IncludeData",
+                "in": "query",
+                "description": "Whether or not to include the execution's detailed data.",
+                "required": false,
+                "schema": {
+                    "type": "boolean"
+                }
+            },
+            {
+                "name": "Limit",
+                "in": "query",
+                "description": "The maximum number of items to return.",
+                "required": false,
+                "schema": {
+                    "type": "number",
+                    "example": 100,
+                    "default": 100,
+                    "maximum": 250
+                }
+            },
+            {
+                "name": "Cursor",
+                "in": "query",
+                "description": "Paginate through users by setting the cursor parameter to a nextCursor attribute returned by a previous request's response. Default value fetches the first \"page\" of the collection. See pagination for more detail.",
+                "required": false,
+                "style": "form",
+                "schema": {
+                    "type": "string"
+                }
             }
+        ],
+        "responses": {
+            "200": {
+                "description": "Operation successful.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ExecutionList"
+                        }
+                    }
+                }
+            },
+            "401": {
+                "$ref": "#/components/responses/Unauthorized"
+            },
+            "404": {
+                "$ref": "#/components/responses/NotFound"
+            }
+        },
+        "operationId": "get_executions"
+    }
+},
+"/executions/{ExecutionId}": {
+    "get": {
+        "x-eov-operation-id": "getExecution",
+        "x-eov-operation-handler": "v1/handlers/executions/executions.handler",
+        "tags": [
+            "Execution"
+        ],
+        "summary": "Retrieve an execution",
+        "description": "Retrieve an execution from you instance.",
+        "parameters": [
+            {
+                "name": "ExecutionId",
+                "in": "path",
+                "description": "The ID of the execution.",
+                "required": true,
+                "schema": {
+                    "type": "number"
+                }
+            },
+            {
+                "name": "IncludeData",
+                "in": "query",
+                "description": "Whether or not to include the execution's detailed data.",
+                "required": false,
+                "schema": {
+                    "type": "boolean"
+                }
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "Operation successful.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Execution"
+                        }
+                    }
+                }
+            },
+            "401": {
+                "$ref": "#/components/responses/Unauthorized"
+            },
+            "404": {
+                "$ref": "#/components/responses/NotFound"
+            }
+        },
+        "operationId": "get_executions_id"
+    },
+    "delete": {
+        "x-eov-operation-id": "deleteExecution",
+        "x-eov-operation-handler": "v1/handlers/executions/executions.handler",
+        "tags": [
+            "Execution"
+        ],
+        "summary": "Delete an execution",
+        "description": "Deletes an execution from your instance.",
+        "parameters": [
+            {
+                "name": "ExecutionId",
+                "in": "path",
+                "description": "The ID of the execution.",
+                "required": true,
+                "schema": {
+                    "type": "number"
+                }
+            }
+        ],
+        "responses": {
+            "200": {
+                "description": "Operation successful.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/Execution"
+                        }
+                    }
+                }
+            },
+            "401": {
+                "$ref": "#/components/responses/Unauthorized"
+            },
+            "404": {
+                "$ref": "#/components/responses/NotFound"
+            }
+        },
+        "operationId": "delete_executions_id"
+    }
+}
+},
+  "components": {
+    "schemas": {
+      "Error": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
           }
         }
       },
-      "401": {
-        "description": "Unauthorized"
+      "Role": {
+        "readOnly": true,
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "readOnly": true,
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "owner",
+            "readOnly": true
+          },
+          "scope": {
+            "type": "string",
+            "readOnly": true,
+            "example": "global"
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Time the role was created.",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last time the role was updated.",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
       },
-      "404": {
-        "description": "The specified resource was not found."
-      }
-    }
-  }
-},
-
-        "/executions": {
-            "get": {
-                "x-eov-operation-id": "getExecutions",
-                "x-eov-operation-handler": "v1/handlers/executions/executions.handler",
-                "tags": [
-                    "Execution"
-                ],
-                "summary": "Retrieve all executions",
-                "description": "Retrieve all executions from your instance.",
-                "parameters": [
-                    {
-                        "name": "IncludeData",
-                        "in": "query",
-                        "description": "Whether or not to include the execution's detailed data.",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    },
-                    {
-                        "name": "Limit",
-                        "in": "query",
-                        "description": "The maximum number of items to return.",
-                        "required": false,
-                        "schema": {
-                            "type": "number",
-                            "example": 100,
-                            "default": 100,
-                            "maximum": 250
-                        }
-                    },
-                    {
-                        "name": "Cursor",
-                        "in": "query",
-                        "description": "Paginate through users by setting the cursor parameter to a nextCursor attribute returned by a previous request's response. Default value fetches the first \"page\" of the collection. See pagination for more detail.",
-                        "required": false,
-                        "style": "form",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/ExecutionList"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/Unauthorized"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/NotFound"
-                    }
-                },
-                "operationId": "get_executions"
-            }
-        },
-        "/executions/{ExecutionId}": {
-            "get": {
-                "x-eov-operation-id": "getExecution",
-                "x-eov-operation-handler": "v1/handlers/executions/executions.handler",
-                "tags": [
-                    "Execution"
-                ],
-                "summary": "Retrieve an execution",
-                "description": "Retrieve an execution from you instance.",
-                "parameters": [
-                    {
-                        "name": "ExecutionId",
-                        "in": "path",
-                        "description": "The ID of the execution.",
-                        "required": true,
-                        "schema": {
-                            "type": "number"
-                        }
-                    },
-                    {
-                        "name": "IncludeData",
-                        "in": "query",
-                        "description": "Whether or not to include the execution's detailed data.",
-                        "required": false,
-                        "schema": {
-                            "type": "boolean"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Execution"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/Unauthorized"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/NotFound"
-                    }
-                },
-                "operationId": "get_executions_id"
+      "Execution": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 1000
+          },
+          "data": {
+            "type": "object"
+          },
+          "finished": {
+            "type": "boolean",
+            "example": true
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "cli",
+              "error",
+              "integrated",
+              "internal",
+              "manual",
+              "retry",
+              "trigger",
+              "webhook"
+            ]
+          },
+          "retryOf": {
+            "type": "number",
+            "nullable": true
+          },
+          "retrySuccessId": {
+            "type": "number",
+            "nullable": true,
+            "example": "2"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "stoppedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "workflowId": {
+            "type": "number",
+            "example": "1000"
+          },
+          "waitTill": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          }
+        }
+      },
+      "Node": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "0f5532f9-36ba-4bef-86c7-30d607400b15"
+          },
+          "name": {
+            "type": "string",
+            "example": "Jira"
+          },
+          "webhookId": {
+            "type": "string"
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "notesInFlow": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "example": "n8n-nodes-base.Jira"
+          },
+          "typeVersion": {
+            "type": "number",
+            "example": 1
+          },
+          "executeOnce": {
+            "type": "boolean",
+            "example": false
+          },
+          "alwaysOutputData": {
+            "type": "boolean",
+            "example": false
+          },
+          "retryOnFail": {
+            "type": "boolean",
+            "example": false
+          },
+          "maxTries": {
+            "type": "number"
+          },
+          "waitBetweenTries": {
+            "type": "number"
+          },
+          "onError": {
+            "type": "string",
+            "example": "stopWorkflow"
+          },
+          "position": {
+            "type": "array",
+            "items": {
+              "type": "number"
             },
-            "delete": {
-                "x-eov-operation-id": "deleteExecution",
-                "x-eov-operation-handler": "v1/handlers/executions/executions.handler",
-                "tags": [
-                    "Execution"
-                ],
-                "summary": "Delete an execution",
-                "description": "Deletes an execution from your instance.",
-                "parameters": [
-                    {
-                        "name": "ExecutionId",
-                        "in": "path",
-                        "description": "The ID of the execution.",
-                        "required": true,
-                        "schema": {
-                            "type": "number"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful.",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Execution"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "$ref": "#/components/responses/Unauthorized"
-                    },
-                    "404": {
-                        "$ref": "#/components/responses/NotFound"
-                    }
-                },
-                "operationId": "delete_executions_id"
+            "example": [
+              -100,
+              80
+            ]
+          },
+          "parameters": {
+            "type": "object",
+            "example": {
+              "additionalProperties": {}
             }
-        },
-
-  },
-  "components": {
-    "schemas": {
+          },
+          "credentials": {
+            "type": "object",
+            "example": {
+              "jiraSoftwareCloudApi": {
+                "id": "35",
+                "name": "jiraApi"
+              }
+            }
+          },
+        }
+      },
+      "Tag": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number",
+            "example": 12
+          },
+          "name": {
+            "type": "string",
+            "example": "Production"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          }
+        }
+      },
+      "Workflow": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "nodes",
+          "connections",
+          "settings"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true,
+            "example": "2tUt1wbLX592XDdX"
+          },
+          "name": {
+            "type": "string",
+            "example": "Workflow 1"
+          },
+          "active": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Node"
+            }
+          },
+          "settings": {
+            "$ref": "#/components/schemas/WorkflowSettings"
+          },
+          "staticData": {
+            "example": {
+              "lastId": 1
+            },
+            "nullable": true,
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "jsonString",
+                "nullable": true
+              },
+              {
+                "type": "object",
+                "nullable": true
+              }
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "readOnly": true
+          }
+        }
+      },
+      "WorkflowSettings": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "saveExecutionProgress": {
+            "type": "boolean"
+          },
+          "saveManualExecutions": {
+            "type": "boolean"
+          },
+          "saveDataErrorExecution": {
+            "type": "string",
+            "enum": [
+              "all",
+              "none"
+            ]
+          },
+          "saveDataSuccessExecution": {
+            "type": "string",
+            "enum": [
+              "all",
+              "none"
+            ]
+          },
+          "executionTimeout": {
+            "type": "number",
+            "example": 3600,
+            "maxLength": 3600
+          },
+          "errorWorkflow": {
+            "type": "string",
+            "example": "VzqKEW0ShTXA5vPj",
+            "description": "The ID of the workflow that contains the error trigger node."
+          },
+          "timezone": {
+            "type": "string",
+            "example": "America/New_York"
+          }
+        }
+      },
+      "ExecutionList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Execution"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "Paginate through executions by setting the cursor parameter to a nextCursor attribute returned by a previous request. Default value fetches the first \"page\" of the collection.",
+            "nullable": true,
+            "example": "MTIzZTQ1NjctZTg5Yi0xMmQzLWE0NTYtNDI2NjE0MTc0MDA"
+          }
+        }
+      },
+      "WorkflowList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Workflow"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "Paginate through workflows by setting the cursor parameter to a nextCursor attribute returned by a previous request. Default value fetches the first \"page\" of the collection.",
+            "nullable": true,
+            "example": "MTIzZTQ1NjctZTg5Yi0xMmQzLWE0NTYtNDI2NjE0MTc0MDA"
+          }
+        }
+      },
       "UserData": {
         "type": "object",
         "properties": {
@@ -775,68 +1204,6 @@
             }
           },
           "nextCursor": {
-            "type": "string"
-          }
-        }
-      },
-    "WorkflowUpdate": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-      },
-      "required": ["name"]
-    },
-      "User": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "isPending": {
-            "type": "boolean"
-          },
-          "globalRole": {
-            "$ref": "#/components/schemas/Role"
-          }
-        }
-      },
-      "Role": {
-        "type": "object",
-        "properties": {
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "scope": {
             "type": "string"
           }
         }
@@ -855,381 +1222,423 @@
           }
         }
       },
-            "Credential": {
-                "required": [
-                    "name",
-                    "type",
-                    "data"
-                ],
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "readOnly": true,
-                        "example": "R2DjclaysHbqn778"
-                    },
-                    "name": {
-                        "type": "string",
-                        "example": "Joe's Github Credentials"
-                    },
-                    "type": {
-                        "type": "string",
-                        "example": "github"
-                    },
-                    "data": {
-                        "type": "object",
-                        "writeOnly": true,
-                        "example": {
-                            "token": "ada612vad6fa5df4adf5a5dsf4389adsf76da7s"
-                        }
-                    },
-                    "createdAt": {
-                        "type": "string",
-                        "format": "date-time",
-                        "readOnly": true,
-                        "example": "2022-04-29T11:02:29.842Z"
-                    },
-                    "updatedAt": {
-                        "type": "string",
-                        "format": "date-time",
-                        "readOnly": true,
-                        "example": "2022-04-29T11:02:29.842Z"
-                    }
-                }
-            },
-            "CredentialType": {
-                "type": "object",
-                "properties": {
-                    "displayName": {
-                        "type": "string",
-                        "readOnly": true,
-                        "example": "Email"
-                    },
-                    "name": {
-                        "type": "string",
-                        "readOnly": true,
-                        "example": "email"
-                    },
-                    "type": {
-                        "type": "string",
-                        "readOnly": true,
-                        "example": "string"
-                    },
-                    "default": {
-                        "type": "string",
-                        "readOnly": true,
-                        "example": "string"
-                    }
-                }
-            },
-            "Audit": {
-                "type": "object",
-                "properties": {
-                    "Credentials Risk Report": {
-                        "type": "object",
-                        "example": {
-                            "risk": "credentials",
-                            "sections": [
-                                {
-                                    "title": "Credentials not used in any workflow",
-                                    "description": "These credentials are not used in any workflow. Keeping unused credentials in your instance is an unneeded security risk.",
-                                    "recommendation": "Consider deleting these credentials if you no longer need them.",
-                                    "location": [
-                                        {
-                                            "kind": "credential",
-                                            "id": "1",
-                                            "name": "My Test Account"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "Database Risk Report": {
-                        "type": "object",
-                        "example": {
-                            "risk": "database",
-                            "sections": [
-                                {
-                                    "title": "Expressions in \"Execute Query\" fields in SQL nodes",
-                                    "description": "This SQL node has an expression in the \"Query\" field of an \"Execute Query\" operation. Building a SQL query with an expression may lead to a SQL injection attack.",
-                                    "recommendation": "Consider using the \"Query Parameters\" field to pass parameters to the query",
-                                    "or validating the input of the expression in the \"Query\" field.": null,
-                                    "location": [
-                                        {
-                                            "kind": "node",
-                                            "workflowId": "1",
-                                            "workflowName": "My Workflow",
-                                            "nodeId": "51eb5852-ce0b-4806-b4ff-e41322a4041a",
-                                            "nodeName": "MySQL",
-                                            "nodeType": "n8n-nodes-base.mySql"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "Filesystem Risk Report": {
-                        "type": "object",
-                        "example": {
-                            "risk": "filesystem",
-                            "sections": [
-                                {
-                                    "title": "Nodes that interact with the filesystem",
-                                    "description": "This node reads from and writes to any accessible file in the host filesystem. Sensitive file content may be manipulated through a node operation.",
-                                    "recommendation": "Consider protecting any sensitive files in the host filesystem",
-                                    "or refactoring the workflow so that it does not require host filesystem interaction.": null,
-                                    "location": [
-                                        {
-                                            "kind": "node",
-                                            "workflowId": "1",
-                                            "workflowName": "My Workflow",
-                                            "nodeId": "51eb5852-ce0b-4806-b4ff-e41322a4041a",
-                                            "nodeName": "Ready Binary file",
-                                            "nodeType": "n8n-nodes-base.readBinaryFile"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "Nodes Risk Report": {
-                        "type": "object",
-                        "example": {
-                            "risk": "nodes",
-                            "sections": [
-                                {
-                                    "title": "Community nodes",
-                                    "description": "This node is sourced from the community. Community nodes are not vetted by the n8n team and have full access to the host system.",
-                                    "recommendation": "Consider reviewing the source code in any community nodes installed in this n8n instance",
-                                    "and uninstalling any community nodes no longer used.": null,
-                                    "location": [
-                                        {
-                                            "kind": "community",
-                                            "nodeType": "n8n-nodes-test.test",
-                                            "packageUrl": "https://www.npmjs.com/package/n8n-nodes-test"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    },
-                    "Instance Risk Report": {
-                        "type": "object",
-                        "example": {
-                            "risk": "execution",
-                            "sections": [
-                                {
-                                    "title": "Unprotected webhooks in instance",
-                                    "description": "These webhook nodes have the \"Authentication\" field set to \"None\" and are not directly connected to a node to validate the payload. Every unprotected webhook allows your workflow to be called by any third party who knows the webhook URL.",
-                                    "recommendation": "Consider setting the \"Authentication\" field to an option other than \"None\"",
-                                    "or validating the payload with one of the following nodes.": null,
-                                    "location": [
-                                        {
-                                            "kind": "community",
-                                            "nodeType": "n8n-nodes-test.test",
-                                            "packageUrl": "https://www.npmjs.com/package/n8n-nodes-test"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    }
-                }
-            },
-            "Pull": {
-                "type": "object",
-                "properties": {
-                    "force": {
-                        "type": "boolean",
-                        "example": true
-                    },
-                    "variables": {
-                        "type": "object",
-                        "example": {
-                            "foo": "bar"
-                        }
-                    }
-                }
-            },
-            "ImportResult": {
-                "type": "object",
-                "additionalProperties": true,
-                "properties": {
-                    "variables": {
-                        "type": "object",
-                        "properties": {
-                            "added": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            },
-                            "changed": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "credentials": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                },
-                                "type": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "workflows": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "name": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    },
-                    "tags": {
-                        "type": "object",
-                        "properties": {
-                            "tags": {
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "id": {
-                                            "type": "string"
-                                        },
-                                        "name": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            },
-                            "mappings": {
-                                "type": "array",
-                                "items": {
-                                    "type": "object",
-                                    "properties": {
-                                        "workflowId": {
-                                            "type": "string"
-                                        },
-                                        "tagId": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "ExecutionList": {
-                "type": "object",
-                "properties": {
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/Execution"
-                        }
-                    },
-                    "nextCursor": {
-                        "type": "string",
-                        "description": "Paginate through executions by setting the cursor parameter to a nextCursor attribute returned by a previous request. Default value fetches the first \"page\" of the collection.",
-                        "nullable": true,
-                        "example": "MTIzZTQ1NjctZTg5Yi0xMmQzLWE0NTYtNDI2NjE0MTc0MDA"
-                    }
-                }
-            },
-            "Execution": {
-                "type": "object",
-                "properties": {
-                    "id": {
-                        "type": "number",
-                        "example": 1000
-                    },
-                    "data": {
-                        "type": "object"
-                    },
-                    "finished": {
-                        "type": "boolean",
-                        "example": true
-                    },
-                    "mode": {
-                        "type": "string",
-                        "enum": [
-                            "cli",
-                            "error",
-                            "integrated",
-                            "internal",
-                            "manual",
-                            "retry",
-                            "trigger",
-                            "webhook"
-                        ]
-                    },
-                    "retryOf": {
-                        "type": "number",
-                        "nullable": true
-                    },
-                    "retrySuccessId": {
-                        "type": "number",
-                        "nullable": true,
-                        "example": "2"
-                    },
-                    "startedAt": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "stoppedAt": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "workflowId": {
-                        "type": "number",
-                        "example": "1000"
-                    },
-                    "waitTill": {
-                        "type": "string",
-                        "nullable": true,
-                        "format": "date-time"
-                    }
-                }
-            },
-      "Workflow": {
+      "WorkflowUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": ["name"]
+      },
+      "Credential": {
+        "required": [
+          "name",
+          "type",
+          "data"
+        ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "readOnly": true,
+            "example": "R2DjclaysHbqn778"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "example": "Joe's Github Credentials"
           },
-          "active": {
-            "type": "boolean"
+          "type": {
+            "type": "string",
+            "example": "github"
+          },
+          "data": {
+            "type": "object",
+            "writeOnly": true,
+            "example": {
+              "token": "ada612vad6fa5df4adf5a5dsf4389adsf76da7s"
+            }
           },
           "createdAt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "readOnly": true,
+            "example": "2022-04-29T11:02:29.842Z"
           },
           "updatedAt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "readOnly": true,
+            "example": "2022-04-29T11:02:29.842Z"
+          }
+        }
+      },
+      "CredentialType": {
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string",
+            "readOnly": true,
+            "example": "Email"
+          },
+          "name": {
+            "type": "string",
+            "readOnly": true,
+            "example": "email"
+          },
+          "type": {
+            "type": "string",
+            "readOnly": true,
+            "example": "string"
+          },
+          "default": {
+            "type": "string",
+            "readOnly": true,
+            "example": "string"
+          }
+        }
+      },
+      "Audit": {
+        "type": "object",
+        "properties": {
+          "Credentials Risk Report": {
+            "type": "object",
+            "example": {
+              "risk": "credentials",
+              "sections": [
+                {
+                  "title": "Credentials not used in any workflow",
+                  "description": "These credentials are not used in any workflow. Keeping unused credentials in your instance is an unneeded security risk.",
+                  "recommendation": "Consider deleting these credentials if you no longer need them.",
+                  "location": [
+                    {
+                      "kind": "credential",
+                      "id": "1",
+                      "name": "My Test Account"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "Database Risk Report": {
+            "type": "object",
+            "example": {
+              "risk": "database",
+              "sections": [
+                {
+                  "title": "Expressions in \"Execute Query\" fields in SQL nodes",
+                  "description": "This SQL node has an expression in the \"Query\" field of an \"Execute Query\" operation. Building a SQL query with an expression may lead to a SQL injection attack.",
+                  "recommendation": "Consider using the \"Query Parameters\" field to pass parameters to the query",
+                  "or validating the input of the expression in the \"Query\" field.": null,
+                  "location": [
+                    {
+                      "kind": "node",
+                      "workflowId": "1",
+                      "workflowName": "My Workflow",
+                      "nodeId": "51eb5852-ce0b-4806-b4ff-e41322a4041a",
+                      "nodeName": "MySQL",
+                      "nodeType": "n8n-nodes-base.mySql"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "Filesystem Risk Report": {
+            "type": "object",
+            "example": {
+              "risk": "filesystem",
+              "sections": [
+                {
+                  "title": "Nodes that interact with the filesystem",
+                  "description": "This node reads from and writes to any accessible file in the host filesystem. Sensitive file content may be manipulated through a node operation.",
+                  "recommendation": "Consider protecting any sensitive files in the host filesystem",
+                  "or refactoring the workflow so that it does not require host filesystem interaction.": null,
+                  "location": [
+                    {
+                      "kind": "node",
+                      "workflowId": "1",
+                      "workflowName": "My Workflow",
+                      "nodeId": "51eb5852-ce0b-4806-b4ff-e41322a4041a",
+                      "nodeName": "Ready Binary file",
+                      "nodeType": "n8n-nodes-base.readBinaryFile"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "Nodes Risk Report": {
+            "type": "object",
+            "example": {
+              "risk": "nodes",
+              "sections": [
+                {
+                  "title": "Community nodes",
+                  "description": "This node is sourced from the community. Community nodes are not vetted by the n8n team and have full access to the host system.",
+                  "recommendation": "Consider reviewing the source code in any community nodes installed in this n8n instance",
+                  "and uninstalling any community nodes no longer used.": null,
+                  "location": [
+                    {
+                      "kind": "community",
+                      "nodeType": "n8n-nodes-test.test",
+                      "packageUrl": "https://www.npmjs.com/package/n8n-nodes-test"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "Instance Risk Report": {
+            "type": "object",
+            "example": {
+              "risk": "execution",
+              "sections": [
+                {
+                  "title": "Unprotected webhooks in instance",
+                  "description": "These webhook nodes have the \"Authentication\" field set to \"None\" and are not directly connected to a node to validate the payload. Every unprotected webhook allows your workflow to be called by any third party who knows the webhook URL.",
+                  "recommendation": "Consider setting the \"Authentication\" field to an option other than \"None\"",
+                  "or validating the payload with one of the following nodes.": null,
+                  "location": [
+                    {
+                      "kind": "community",
+                      "nodeType": "n8n-nodes-test.test",
+                      "packageUrl": "https://www.npmjs.com/package/n8n-nodes-test"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      },
+      "Pull": {
+        "type": "object",
+        "properties": {
+          "force": {
+            "type": "boolean",
+            "example": true
+          },
+          "variables": {
+            "type": "object",
+            "example": {
+              "foo": "bar"
+            }
+          }
+        }
+      },
+      "ImportResult": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "variables": {
+            "type": "object",
+            "properties": {
+              "added": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "changed": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "credentials": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "workflows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "tags": {
+            "type": "object",
+            "properties": {
+              "tags": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "mappings": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "workflowId": {
+                      "type": "string"
+                    },
+                    "tagId": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "UserList": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "nextCursor": {
+            "type": "string",
+            "description": "Paginate through users by setting the cursor parameter to a nextCursor attribute returned by a previous request. Default value fetches the first \"page\" of the collection.",
+            "nullable": true,
+            "example": "MTIzZTQ1NjctZTg5Yi0xMmQzLWE0NTYtNDI2NjE0MTc0MDA"
+          }
+        }
+      },
+      "Connections": {
+        "type": "object",
+        "properties": {},
+        "description": "Dynamic schema for various node connections in a workflow. This object does not have fixed properties and allows for dynamic keys with each key being a node name.",
+        "additionalProperties": {
+          "type": "object",
+          "description": "Schema for a single node's connections. Defines the structure for each node connection.",
+          "properties": {
+            "main": {
+              "type": "array",
+        "items": {
+              "type": "array",
+              "description": "An array representing connection points for a node.",
+              "items": {
+                "type": "array",
+                "description": "An array representing individual connections for a connection point.",
+                "items": {
+                  "type": "object",
+                  "description": "Details of a single connection.",
+                  "properties": {
+                    "node": {
+                      "type": "string",
+                      "description": "The name of the node to connect to."
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "The type of the connection."
+                    },
+                    "index": {
+                      "type": "integer",
+                      "description": "The index of the node connection."
+                    }
+                  },
+                  "required": ["node", "type", "index"]
+                }
+              }
+            }
+            }
+          }
+        },
+        "example": {
+          "Webhook": {
+            "main": [
+              [
+                {
+                  "node": "HTTP Request",
+                  "type": "main",
+                  "index": 0
+                }
+              ]
+            ]
+          }
+        }
+      },
+
+      
+      
+        
+      "User": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "readOnly": true,
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "example": "john.doe@company.com"
+          },
+          "firstName": {
+            "maxLength": 32,
+            "type": "string",
+            "description": "User's first name",
+            "readOnly": true,
+            "example": "john"
+          },
+          "lastName": {
+            "maxLength": 32,
+            "type": "string",
+            "description": "User's last name",
+            "readOnly": true,
+            "example": "Doe"
+          },
+          "isPending": {
+            "type": "boolean",
+            "description": "Whether the user finished setting up their account in response to the invitation (true) or not (false).",
+            "readOnly": true
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "Time the user was created.",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last time the user was updated.",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "globalRole": {
+            "$ref": "#/components/schemas/Role"
           }
         }
       }
