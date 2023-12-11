@@ -10,7 +10,8 @@
       "url": "https://kyleyoello.app.n8n.cloud/webhook/e30e36fb-9c2e-4a7b-a64a-994ce82b4ca0"
     }
   ],
-  "paths": {        "/audit": {
+  "paths": {
+"/audit": {
     "post": {
         "x-eov-operation-id": "generateAudit",
         "x-eov-operation-handler": "v1/handlers/audit/audit.handler",
@@ -73,7 +74,8 @@
         },
         "operationId": "post_audit"
     }
-},        "/source-control/pull": {
+},
+"/source-control/pull": {
     "post": {
         "x-eov-operation-id": "pull",
         "x-eov-operation-handler": "v1/handlers/sourceControl/sourceControl.handler",
@@ -436,60 +438,62 @@
     }
   }
   },
-  "post": {
-    "operationId": "createWorkflow",
-    "summary": "Create a workflow",
-    "description": "Create a workflow in your instance.",
-    "requestBody": {
-      "description": "Created workflow object.",
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "required": ["name", "nodes", "connections", "settings"],
-            "properties": {
-              "name": {
-                "type": "string"
-              },
-              "nodes": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Node"
+    "post": {
+      "operationId": "createWorkflow",
+      "summary": "Create a workflow.",
+      "description": "Create a workflow in your instance.",
+      "requestBody": {
+        "description": "Creating workflow object",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "required": ["name", "nodes", "connections", "settings"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the Workflow."
+                },
+                "nodes": {
+                  "type": "array",
+                  "description": "The nodes to include in the workflow.",
+                  "items": {
+                    "$ref": "#/components/schemas/Node"
+                  }
+                },
+                "connections": {
+                  "description": "Describes the connections between the nodes of the workflow.",
+                  "$ref": "#/components/schemas/Connections"
+                },
+                "settings": {
+                  "description": "The settings of the workflow.",
+                  "$ref": "#/components/schemas/WorkflowSettings"
                 }
-              },
-              "connections": {
-                "$ref": "#/components/schemas/Connections"
-              },
-              "settings": {
-                "$ref": "#/components/schemas/WorkflowSettings"
               }
             }
           }
         }
-      }
-    },
-    "responses": {
-      "200": {
-        "description": "A workflow object",
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/Workflow"
+      },
+      "responses": {
+        "200": {
+          "description": "A workflow object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Workflow"
+              }
             }
           }
+        },
+        "400": {
+          "description": "The request is invalid or provides malformed data."
+        },
+        "401": {
+          "description": "Unauthorized"
         }
-      },
-      "400": {
-        "description": "The request is invalid or provides malformed data."
-      },
-      "401": {
-        "description": "Unauthorized"
       }
     }
-  }
-  
-
 },
 "/workflows/{id}": {
 "delete": {
@@ -974,7 +978,412 @@
           },
           "type": {
             "type": "string",
-            "example": "n8n-nodes-base.Jira"
+            "example": "n8n-nodes-base.Jira",
+            "enum": ["ActionNetwork",
+            "ActiveCampaign",
+            "ActiveCampaignTrigger",
+            "AcuitySchedulingTrigger",
+            "Adalo",
+            "Affinity",
+            "AffinityTrigger",
+            "AgileCrm",
+            "Airtable",
+            "AirtableTrigger",
+            "Amqp",
+            "AmqpTrigger",
+            "ApiTemplateIo",
+            "Asana",
+            "AsanaTrigger",
+            "Automizy",
+            "Autopilot",
+            "AutopilotTrigger",
+            "AwsLambda",
+            "AwsSns",
+            "AwsSnsTrigger",
+            "AwsCertificateManager",
+            "AwsComprehend",
+            "AwsDynamoDB",
+            "AwsElb",
+            "AwsRekognition",
+            "AwsS3",
+            "AwsSes",
+            "AwsSqs",
+            "AwsTextract",
+            "AwsTranscribe",
+            "BambooHr",
+            "Bannerbear",
+            "Baserow",
+            "Beeminder",
+            "BitbucketTrigger",
+            "Bitly",
+            "Bitwarden",
+            "Box",
+            "BoxTrigger",
+            "Brandfetch",
+            "Bubble",
+            "CalTrigger",
+            "CalendlyTrigger",
+            "Chargebee",
+            "ChargebeeTrigger",
+            "CircleCi",
+            "CiscoWebex",
+            "CitrixAdc",
+            "CiscoWebexTrigger",
+            "Cloudflare",
+            "Clearbit",
+            "ClickUp",
+            "ClickUpTrigger",
+            "Clockify",
+            "ClockifyTrigger",
+            "Cockpit",
+            "Coda",
+            "Code",
+            "CoinGecko",
+            "CompareDatasets",
+            "Compression",
+            "Contentful",
+            "ConvertKit",
+            "ConvertKitTrigger",
+            "Copper",
+            "CopperTrigger",
+            "Cortex",
+            "CrateDb",
+            "Cron",
+            "CrowdDev",
+            "CrowdDevTrigger",
+            "Crypto",
+            "CustomerIo",
+            "CustomerIoTrigger",
+            "DateTime",
+            "DebugHelper",
+            "DeepL",
+            "Demio",
+            "Dhl",
+            "Discord",
+            "Discourse",
+            "Disqus",
+            "Drift",
+            "Dropbox",
+            "Dropcontact",
+            "EditImage",
+            "E2eTest",
+            "Egoi",
+            "Elasticsearch",
+            "ElasticSecurity",
+            "EmailReadImap",
+            "EmailSend",
+            "Emelia",
+            "EmeliaTrigger",
+            "ERPNext",
+            "ErrorTrigger",
+            "EventbriteTrigger",
+            "ExecuteCommand",
+            "ExecuteWorkflow",
+            "ExecuteWorkflowTrigger",
+            "ExecutionData",
+            "FacebookGraphApi",
+            "FacebookTrigger",
+            "FacebookLeadAdsTrigger",
+            "FigmaTrigger",
+            "FileMaker",
+            "Filter",
+            "Flow",
+            "FlowTrigger",
+            "FormTrigger",
+            "FormIoTrigger",
+            "FormstackTrigger",
+            "Freshdesk",
+            "Freshservice",
+            "FreshworksCrm",
+            "Ftp",
+            "Function",
+            "FunctionItem",
+            "GetResponse",
+            "GetResponseTrigger",
+            "Ghost",
+            "Git",
+            "Github",
+            "GithubTrigger",
+            "Gitlab",
+            "GitlabTrigger",
+            "GoogleAds",
+            "GoogleAnalytics",
+            "GoogleBigQuery",
+            "GoogleBooks",
+            "GoogleCalendar",
+            "GoogleCalendarTrigger",
+            "GoogleChat",
+            "GoogleCloudNaturalLanguage",
+            "GoogleCloudStorage",
+            "GoogleContacts",
+            "GoogleDocs",
+            "GoogleDrive",
+            "GoogleDriveTrigger",
+            "GoogleFirebaseCloudFirestore",
+            "GoogleFirebaseRealtimeDatabase",
+            "GoogleGmail",
+            "GoogleGmailTrigger",
+            "GoogleGSuiteAdmin",
+            "GooglePerspective",
+            "GoogleSheets",
+            "GoogleSheetsTrigger",
+            "GoogleSlides",
+            "GoogleTasks",
+            "GoogleTranslate",
+            "GoogleYouTube",
+            "Gotify",
+            "GoToWebinar",
+            "Grafana",
+            "GraphQL",
+            "Grist",
+            "GumroadTrigger",
+            "HackerNews",
+            "HaloPSA",
+            "Harvest",
+            "HelpScout",
+            "HelpScoutTrigger",
+            "HighLevel",
+            "HomeAssistant",
+            "HtmlExtract",
+            "Html",
+            "HttpRequest",
+            "Hubspot",
+            "HubspotTrigger",
+            "HumanticAI",
+            "Hunter",
+            "ICalendar",
+            "If",
+            "Intercom",
+            "Interval",
+            "InvoiceNinja",
+            "InvoiceNinjaTrigger",
+            "ItemLists",
+            "Iterable",
+            "Jenkins",
+            "Jira",
+            "JiraTrigger",
+            "JotFormTrigger",
+            "Kafka",
+            "KafkaTrigger",
+            "Keap",
+            "KeapTrigger",
+            "Kitemaker",
+            "KoBoToolbox",
+            "KoBoToolboxTrigger",
+            "Ldap",
+            "Lemlist",
+            "LemlistTrigger",
+            "Line",
+            "Linear",
+            "LinearTrigger",
+            "LingvaNex",
+            "LinkedIn",
+            "LocalFileTrigger",
+            "LoneScale",
+            "LoneScaleTrigger",
+            "Magento2",
+            "Mailcheck",
+            "Mailchimp",
+            "MailchimpTrigger",
+            "MailerLite",
+            "MailerLiteTrigger",
+            "Mailgun",
+            "Mailjet",
+            "MailjetTrigger",
+            "Mandrill",
+            "ManualTrigger",
+            "Markdown",
+            "Marketstack",
+            "Matrix",
+            "Mattermost",
+            "Mautic",
+            "MauticTrigger",
+            "Medium",
+            "Merge",
+            "MessageBird",
+            "Metabase",
+            "MicrosoftDynamicsCrm",
+            "MicrosoftExcel",
+            "MicrosoftGraphSecurity",
+            "MicrosoftOneDrive",
+            "MicrosoftOutlook",
+            "MicrosoftSql",
+            "MicrosoftTeams",
+            "MicrosoftToDo",
+            "Mindee",
+            "Misp",
+            "Mocean",
+            "MondayCom",
+            "MongoDb",
+            "MonicaCrm",
+            "MoveBinaryData",
+            "Mqtt",
+            "MqttTrigger",
+            "Msg91",
+            "MySql",
+            "N8n",
+            "N8nTrainingCustomerDatastore",
+            "N8nTrainingCustomerMessenger",
+            "N8nTrigger",
+            "Nasa",
+            "Netlify",
+            "NetlifyTrigger",
+            "NextCloud",
+            "NocoDB",
+            "Brevo",
+            "BrevoTrigger",
+            "StickyNote",
+            "NoOp",
+            "Onfleet",
+            "OnfleetTrigger",
+            "Notion",
+            "NotionTrigger",
+            "Npm",
+            "Odoo",
+            "OneSimpleApi",
+            "OpenAi",
+            "OpenThesaurus",
+            "OpenWeatherMap",
+            "Orbit",
+            "Oura",
+            "Paddle",
+            "PagerDuty",
+            "PayPal",
+            "PayPalTrigger",
+            "Peekalink",
+            "Phantombuster",
+            "PhilipsHue",
+            "Pipedrive",
+            "PipedriveTrigger",
+            "Plivo",
+            "PostBin",
+            "Postgres",
+            "PostgresTrigger",
+            "PostHog",
+            "PostmarkTrigger",
+            "ProfitWell",
+            "Pushbullet",
+            "Pushcut",
+            "PushcutTrigger",
+            "Pushover",
+            "QuestDb",
+            "QuickBase",
+            "QuickBooks",
+            "QuickChart",
+            "RabbitMQ",
+            "RabbitMQTrigger",
+            "Raindrop",
+            "ReadBinaryFile",
+            "ReadBinaryFiles",
+            "ReadPdf",
+            "Reddit",
+            "Redis",
+            "RedisTrigger",
+            "RenameKeys",
+            "RespondToWebhook",
+            "Rocketchat",
+            "RssFeedRead",
+            "RssFeedReadTrigger",
+            "Rundeck",
+            "S3",
+            "Salesforce",
+            "Salesmate",
+            "ScheduleTrigger",
+            "SeaTable",
+            "SeaTableTrigger",
+            "SecurityScorecard",
+            "Segment",
+            "SendGrid",
+            "Sendy",
+            "SentryIo",
+            "ServiceNow",
+            "Set",
+            "Shopify",
+            "ShopifyTrigger",
+            "Signl4",
+            "Slack",
+            "Sms77",
+            "Snowflake",
+            "SplitInBatches",
+            "Splunk",
+            "Spontit",
+            "Spotify",
+            "SpreadsheetFile",
+            "SseTrigger",
+            "Ssh",
+            "Stackby",
+            "Start",
+            "StopAndError",
+            "Storyblok",
+            "Strapi",
+            "Strava",
+            "StravaTrigger",
+            "Stripe",
+            "StripeTrigger",
+            "Supabase",
+            "SurveyMonkeyTrigger",
+            "Switch",
+            "SyncroMsp",
+            "Taiga",
+            "TaigaTrigger",
+            "Tapfiliate",
+            "Telegram",
+            "TelegramTrigger",
+            "TheHiveProject",
+            "TheHiveProjectTrigger",
+            "TheHive",
+            "TheHiveTrigger",
+            "TimescaleDb",
+            "Todoist",
+            "TogglTrigger",
+            "Totp",
+            "TravisCi",
+            "Trello",
+            "TrelloTrigger",
+            "Twake",
+           "Twilio",
+            "Twist",
+            "Twitter",
+            "TypeformTrigger",
+            "UnleashedSoftware",
+            "Uplead",
+            "UProc",
+            "UptimeRobot",
+            "UrlScanIo",
+            "Vero",
+            "VenafiProtectCloud",
+            "VenafiProtectCloudTrigger",
+            "VenafiDatacenter",
+            "Vonage",
+            "Wait",
+            "Webflow",
+            "WebflowTrigger",
+            "Webhook",
+            "Wekan",
+            "WhatsApp",
+            "Wise",
+            "WiseTrigger",
+            "WooCommerce",
+            "WooCommerceTrigger",
+            "Wordpress",
+            "WorkableTrigger",
+            "WorkflowTrigger",
+            "WriteBinaryFile",
+            "WufooTrigger",
+            "Xero",
+            "Xml",
+            "Yourls",
+            "Zammad",
+            "Zendesk",
+            "ZendeskTrigger",
+            "ZohoCrm",
+            "Zoom",
+            "Zulip",
+            "Aggregate",
+            "Limit",
+            "RemoveDuplicates",
+            "SplitOut",
+            "Sort", "Summarize"]
           },
           "typeVersion": {
             "type": "number",
@@ -1542,33 +1951,33 @@
           "properties": {
             "main": {
               "type": "array",
-        "items": {
-              "type": "array",
-              "description": "An array representing connection points for a node.",
-              "items": {
+          "items": {
                 "type": "array",
-                "description": "An array representing individual connections for a connection point.",
+                "description": "An array representing connection points for a node.",
                 "items": {
-                  "type": "object",
-                  "description": "Details of a single connection.",
-                  "properties": {
-                    "node": {
-                      "type": "string",
-                      "description": "The name of the node to connect to."
+                  "type": "array",
+                  "description": "An array representing individual connections for a connection point.",
+                  "items": {
+                    "type": "object",
+                    "description": "Details of a single connection.",
+                    "properties": {
+                      "node": {
+                        "type": "string",
+                        "description": "The name of the node to connect to."
+                      },
+                      "type": {
+                        "type": "string",
+                        "description": "The type of the connection."
+                      },
+                      "index": {
+                        "type": "integer",
+                        "description": "The index of the node connection."
+                      }
                     },
-                    "type": {
-                      "type": "string",
-                      "description": "The type of the connection."
-                    },
-                    "index": {
-                      "type": "integer",
-                      "description": "The index of the node connection."
-                    }
-                  },
-                  "required": ["node", "type", "index"]
+                    "required": ["node", "type", "index"]
+                  }
                 }
               }
-            }
             }
           }
         },
@@ -1585,11 +1994,7 @@
             ]
           }
         }
-      },
-
-      
-      
-        
+      },      
       "User": {
         "required": [
           "email"
